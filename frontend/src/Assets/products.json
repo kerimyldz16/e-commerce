@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "name": "Laptop",
+    "price": 50,
+    "category": "technology",
+    "image": "https://via.placeholder.com/300",
+    "description": "Güçlü ve taşınabilir laptop.",
+    "comments": [
+      {
+        "user": "John Doe",
+        "comment": "Bu laptop gerçekten harika!"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "T-Shirt",
+    "price": 20,
+    "category": "clothes",
+    "image": "https://via.placeholder.com/300",
+    "description": "Rahat ve şık t-shirt.",
+    "comments": [
+      {
+        "user": "Mustafa",
+        "comment": "Very good!"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Tent",
+    "price": 21,
+    "category": "sports",
+    "image": "https://via.placeholder.com/300",
+    "description": "Güçlü ve taşınabilir laptop.",
+    "comments": [
+      {
+        "user": "Kerim",
+        "comment": "Nice!"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Sofa",
+    "price": 321,
+    "category": "furniture",
+    "image": "https://via.placeholder.com/300",
+    "description": "Güçlü ve taşınabilir laptop.",
+    "comments": [
+      {
+        "user": "Ana Blue",
+        "comment": "Great!"
+      }
+    ]
+  }
+]
