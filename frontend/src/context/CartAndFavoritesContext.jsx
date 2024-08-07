@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { supabase } from "../utils/supabaseClient";
 import { useAuth } from "./AuthContext";
+import { toast } from "react-toastify";
 
 const CartAndFavoritesContext = createContext();
 
@@ -69,7 +70,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
   // Handle adding item to cart
   const handleAddToCart = async (product) => {
     if (!currentUser) {
-      alert("Please Login");
+      toast.info("Please login to add items to your cart.");
       return;
     }
 
@@ -88,6 +89,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
 
         if (error) {
           console.error("Error updating cart:", error.message);
+          toast.error("Error updating cart.");
         } else {
           setCartItems((prevItems) =>
             prevItems.map((item) =>
@@ -96,6 +98,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
                 : item
             )
           );
+          toast.success("Cart updated successfully.");
         }
       } else {
         // Add new item to the cart
@@ -111,6 +114,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
 
         if (error) {
           console.error("Error adding to cart:", error.message);
+          toast.error("Error adding to cart.");
         } else {
           setCartItems((prevItems) => [
             ...prevItems,
@@ -122,17 +126,19 @@ export const CartAndFavoritesProvider = ({ children }) => {
               user_id: currentUser.id,
             },
           ]);
+          toast.success("Product added to cart!");
         }
       }
     } catch (error) {
       console.error("Unexpected error adding to cart:", error);
+      toast.error("Unexpected error adding to cart.");
     }
   };
 
   // Handle adding item to favorites
   const handleAddToFavorites = async (product) => {
     if (!currentUser) {
-      alert("Please Login");
+      toast.info("Please login to add items to your favorites.");
       return;
     }
 
@@ -141,7 +147,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
     );
 
     if (existingItem) {
-      alert("This item is already added to favorites.");
+      toast.info("This item is already added to favorites.");
       return;
     }
 
@@ -157,6 +163,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
 
       if (error) {
         console.error("Error adding to favorites:", error.message);
+        toast.error("Error adding to favorites.");
       } else {
         setFavorites((prevItems) => [
           ...prevItems,
@@ -167,9 +174,11 @@ export const CartAndFavoritesProvider = ({ children }) => {
             user_id: currentUser.id,
           },
         ]);
+        toast.success("Product added to favorites!");
       }
     } catch (error) {
       console.error("Unexpected error adding to favorites:", error);
+      toast.error("Unexpected error adding to favorites.");
     }
   };
 
@@ -182,10 +191,12 @@ export const CartAndFavoritesProvider = ({ children }) => {
 
     if (error) {
       console.error("Error removing from cart:", error.message);
+      toast.error("Error removing from cart.");
     } else {
       setCartItems((prevItems) =>
         prevItems.filter((item) => item.product_id !== productId)
       );
+      toast.success("Product removed from cart.");
     }
   };
 
@@ -198,10 +209,12 @@ export const CartAndFavoritesProvider = ({ children }) => {
 
     if (error) {
       console.error("Error removing from favorites:", error.message);
+      toast.error("Error removing from favorites.");
     } else {
       setFavorites((prevItems) =>
         prevItems.filter((item) => item.product_id !== productId)
       );
+      toast.success("Product removed from favorites.");
     }
   };
 
@@ -214,6 +227,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
 
     if (error) {
       console.error("Error updating quantity:", error.message);
+      toast.error("Error updating quantity.");
     } else {
       setCartItems((prevItems) =>
         prevItems.map((item) =>
@@ -222,6 +236,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
             : item
         )
       );
+      toast.success("Quantity updated successfully.");
     }
   };
 

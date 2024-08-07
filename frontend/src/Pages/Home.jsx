@@ -1,5 +1,3 @@
-// Home.jsx
-
 import React, { useState, useEffect } from "react";
 import ProductCard from "../Components/ProductCard.jsx";
 import ProductModal from "../Components/ProductModal.jsx";
@@ -7,6 +5,7 @@ import { useCartAndFavorites } from "../context/CartAndFavoritesContext.jsx";
 import { supabase } from "../utils/supabaseClient.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { FaSearch } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const ITEMS_PER_PAGE = 12; // Number of products per page
 
@@ -37,6 +36,7 @@ const Home = () => {
       setFilteredProducts(productsData); // Set filtered products initially to all products
     } catch (error) {
       console.error("Error fetching products:", error.message);
+      toast.error("Failed to fetch products.");
     }
   };
 
@@ -50,9 +50,9 @@ const Home = () => {
 
       if (error) {
         console.error("Error removing product:", error.message);
-        alert("Failed to remove product. Please try again.");
+        toast.error("Failed to remove product. Please try again.");
       } else {
-        alert("Product removed successfully.");
+        toast.success("Product removed successfully.");
         console.log(`Product with ID ${productId} removed successfully.`);
 
         // Update local state after successful deletion
@@ -65,7 +65,7 @@ const Home = () => {
       }
     } catch (error) {
       console.error("Error removing product:", error.message);
-      alert("Failed to remove product. Please try again.");
+      toast.error("Failed to remove product. Please try again.");
     }
   };
 

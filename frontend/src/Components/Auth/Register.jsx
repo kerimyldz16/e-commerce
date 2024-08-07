@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -17,11 +18,11 @@ const Register = () => {
       const user = await signUp(email, password, name); // Pass name here
       console.log("Registered:", user);
 
-      alert("You registered successfully");
+      toast.success("You registered successfully");
       navigate("/");
     } catch (error) {
       console.error("Error registering:", error.message);
-      alert("Registration failed. Please try again.");
+      toast.error("Registration failed. Please try again.");
     }
   };
 

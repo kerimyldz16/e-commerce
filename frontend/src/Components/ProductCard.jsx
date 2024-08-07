@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { FaHeart, FaCartPlus } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const ProductCard = ({
   product,
@@ -19,24 +20,26 @@ const ProductCard = ({
   const handleAddToCartClick = async (e) => {
     e.stopPropagation(); // Prevent the modal from opening when clicking on the button
     if (!currentUser) {
-      alert("Please Login");
+      toast.info("Please login to add items to your cart.");
       navigate("/login");
     } else {
       setCartLoading(true); // Set loading to true when adding to cart
       await onAddToCart(product);
       setCartLoading(false); // Reset loading state
+      toast.success("Product added to cart!");
     }
   };
 
   const handleAddToFavoritesClick = async (e) => {
     e.stopPropagation(); // Prevent the modal from opening when clicking on the button
     if (!currentUser) {
-      alert("Please Login");
+      toast.info("Please login to add items to your favorites.");
       navigate("/login");
     } else {
       setFavoritesLoading(true); // Set loading to true when adding to favorites
       await onAddToFavorites(product);
       setFavoritesLoading(false); // Reset loading state
+      toast.success("Product added to favorites!");
     }
   };
 

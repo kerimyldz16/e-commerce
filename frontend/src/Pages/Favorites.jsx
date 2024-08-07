@@ -1,7 +1,6 @@
-// frontend/src/Pages/Favorites.jsx
-
 import React from "react";
 import { useCartAndFavorites } from "../context/CartAndFavoritesContext.jsx";
+import { toast } from "react-toastify";
 
 const Favorites = () => {
   const { favorites, handleRemoveFromFavorites } = useCartAndFavorites();
@@ -23,7 +22,10 @@ const Favorites = () => {
               <h3 className="text-lg font-semibold">{product.product_name}</h3>
               <p className="text-gray-600">Price: ${product.product_price}</p>
               <button
-                onClick={() => handleRemoveFromFavorites(product.product_id)}
+                onClick={() => {
+                  handleRemoveFromFavorites(product.product_id);
+                  toast.success("Removed from favorites.");
+                }}
                 className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
               >
                 Remove

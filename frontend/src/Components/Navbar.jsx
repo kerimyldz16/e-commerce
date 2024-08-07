@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { FaShoppingCart, FaHeart } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const { currentUser, signOut, userName, isAdmin } = useAuth();
@@ -18,10 +19,10 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await signOut();
-      alert("Logged out successfully");
+      toast.success("Logged out successfully");
     } catch (error) {
       console.error("Error logging out:", error.message);
-      alert("Failed to log out. Please try again.");
+      toast.error("Failed to log out. Please try again.");
     }
   };
 

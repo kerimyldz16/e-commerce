@@ -5,6 +5,8 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify styles
 import Navbar from "./Components/Navbar.jsx";
 import Footer from "./Components/Footer.jsx";
 import Home from "./Pages/Home.jsx";
@@ -42,6 +44,8 @@ const App = () => {
       <div className="App flex flex-col min-h-screen">
         <Navbar />
         <AppContent />
+        <ToastContainer position="bottom-right" autoClose={3000} />{" "}
+        {/* Add ToastContainer */}
       </div>
     </Router>
   );

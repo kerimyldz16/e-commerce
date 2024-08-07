@@ -1,7 +1,6 @@
-// frontend/src/Pages/Cart.jsx
-
 import React from "react";
 import { useCartAndFavorites } from "../context/CartAndFavoritesContext.jsx";
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const { cartItems, handleRemoveFromCart, handleUpdateQuantity } =
@@ -15,6 +14,7 @@ const Cart = () => {
 
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity < 1) {
+      toast.error("Quantity must be at least 1.");
       return;
     }
     handleUpdateQuantity(productId, newQuantity);

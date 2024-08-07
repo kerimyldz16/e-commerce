@@ -1,8 +1,7 @@
-// frontend/src/Pages/AddProduct.jsx
-
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { supabase } from "../utils/supabaseClient.js";
+import { toast } from "react-toastify";
 
 const AddProduct = () => {
   const { isAdmin } = useAuth();
@@ -29,7 +28,7 @@ const AddProduct = () => {
     const { name, price, image, description, category } = formData;
 
     if (!name || !price || !image || !description || !category) {
-      alert("Please fill out all fields.");
+      toast.error("Please fill out all fields.");
       return;
     }
 
@@ -40,7 +39,7 @@ const AddProduct = () => {
 
       if (error) throw error;
 
-      alert("Product added successfully.");
+      toast.success("Product added successfully.");
       setFormData({
         name: "",
         price: "",
@@ -50,7 +49,7 @@ const AddProduct = () => {
       });
     } catch (error) {
       console.error("Error adding product:", error.message);
-      alert("Failed to add product. Please try again.");
+      toast.error("Failed to add product. Please try again.");
     }
   };
 
