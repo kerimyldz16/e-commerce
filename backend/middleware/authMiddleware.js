@@ -1,12 +1,4 @@
-import { getAuth } from "firebase-admin/auth";
-import admin from "firebase-admin";
-import serviceAccount from "./serviceAccountKey.json";
-
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
-}
+import { supabase } from "../config/supabase.js";
 
 export const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -18,11 +10,16 @@ export const authMiddleware = async (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const decodedToken = await getAuth().verifyIdToken(token);
-    req.user = decodedToken;
+    const { data, error } = await supabase.auth.getUser(token);
+
+    if (error || !data.user) {
+      throw new Error("Invalid token");
+    }
+
+    req.user = data.user;
     next();
   } catch (error) {
-    console.error("Error verifying token:", error);
+    console.error("Error verifying token:", error.message);
     res.status(403).json({ message: "Invalid token" });
   }
 };

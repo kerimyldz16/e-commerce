@@ -13,10 +13,15 @@ const Favorites = () => {
           <p>No favorite products added.</p>
         ) : (
           favorites.map((product) => (
-            <li key={product.id} className="favorite-item">
-              <h3>{product.name}</h3>
-              <p>Price: ${product.price}</p>
-              <button onClick={() => handleRemoveFromFavorites(product.id)}>
+            <li
+              key={product.product_id} // Use only product_id since it's unique per user
+              className="favorite-item"
+            >
+              <h3>{product.product_name}</h3>
+              <p>Price: ${product.product_price}</p>
+              <button
+                onClick={() => handleRemoveFromFavorites(product.product_id)}
+              >
                 Remove
               </button>
             </li>

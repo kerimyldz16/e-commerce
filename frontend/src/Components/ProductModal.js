@@ -2,8 +2,17 @@ import React from "react";
 import "../Styles/ProductModal.css";
 
 const ProductModal = ({ product, onClose }) => {
+  // Handle click on the backdrop to close the modal
+  const handleBackdropClick = (event) => {
+    // Check if the click was on the backdrop (not the modal content)
+    if (event.target.className === "modal-backdrop") {
+      onClose();
+    }
+  };
+
   return (
-    <div className="modal">
+    // Add backdrop with an onClick handler
+    <div className="modal-backdrop" onClick={handleBackdropClick}>
       <div className="modal-content">
         <span className="close" onClick={onClose}>
           &times;
@@ -16,10 +25,10 @@ const ProductModal = ({ product, onClose }) => {
             <p className="modal-price">${product.price}</p>
             <div className="modal-actions">
               <button onClick={() => console.log("Add to Favorites")}>
-                Favorilere Ekle
+                Add to Favorites
               </button>
               <button onClick={() => console.log("Add to Cart")}>
-                Sepete Ekle
+                Add to Cart
               </button>
             </div>
           </div>

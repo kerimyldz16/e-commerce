@@ -9,13 +9,12 @@ import Login from "./Components/Auth/Login.js";
 import Register from "./Components/Auth/Register.js";
 import Favorites from "./Pages/Favorites.js";
 import "./Styles/styles.css";
-import { handleLogout } from "./context/CartAndFavoritesContext.js";
 
 const App = () => {
   return (
     <Router>
       <div className="App">
-        <Navbar handleLogout={handleLogout} />
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/category/:category" element={<Category />} />

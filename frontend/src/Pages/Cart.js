@@ -6,8 +6,9 @@ const Cart = () => {
   const { cartItems, handleRemoveFromCart, handleUpdateQuantity } =
     useCartAndFavorites();
 
+  // Calculate total amount for the cart
   const totalAmount = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) => acc + item.product_price * item.quantity,
     0
   );
 
@@ -23,9 +24,12 @@ const Cart = () => {
       <h1>Your Cart</h1>
       <ul className="cart-list">
         {cartItems.map((item) => (
-          <li key={item.id} className="cart-item">
-            <h3>{item.name}</h3>
-            <p>Price: ${item.price}</p>
+          <li
+            key={item.product_id} // Use only product_id since it's unique per user
+            className="cart-item"
+          >
+            <h3>{item.product_name}</h3>
+            <p>Price: ${item.product_price}</p>
             <p>
               Quantity:
               <input
@@ -33,11 +37,14 @@ const Cart = () => {
                 value={item.quantity}
                 min="1"
                 onChange={(e) =>
-                  handleQuantityChange(item.id, parseInt(e.target.value))
+                  handleQuantityChange(
+                    item.product_id,
+                    parseInt(e.target.value)
+                  )
                 }
               />
             </p>
-            <button onClick={() => handleRemoveFromCart(item.id)}>
+            <button onClick={() => handleRemoveFromCart(item.product_id)}>
               Remove
             </button>
           </li>

@@ -1,25 +1,25 @@
 import React, { useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import app from "../../utils/firebaseConfig.js";
+import { useAuth } from "../../context/AuthContext.js";
 import "../../Styles/Login.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const auth = getAuth(app);
+  const { signIn } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log("Logged in:", userCredential.user);
-        navigate("/");
-      })
-      .catch((error) => {
-        console.error("Error logging in:", error.message);
-      });
+
+    try {
+      await signIn(email, password);
+      console.log("Logged in successfully");
+      navigate("/");
+    } catch (error) {
+      console.error("Error logging in:", error.message);
+      alert("Login failed. Please check your credentials and try again.");
+    }
   };
 
   return (

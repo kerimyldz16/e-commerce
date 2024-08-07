@@ -1,15 +1,25 @@
+// src/Components/Navbar.js
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.js";
 import { FaShoppingCart, FaHeart } from "react-icons/fa";
 import "../Styles/Navbar.css";
 
-const Navbar = ({ handleLogout }) => {
-  const { currentUser } = useAuth();
+const Navbar = () => {
+  const { currentUser, signOut } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      setMenuOpen(false);
+    } catch (error) {
+      console.error("Error logging out:", error.message);
+    }
   };
 
   return (
@@ -38,28 +48,32 @@ const Navbar = ({ handleLogout }) => {
         <Link to="/favorites">
           <FaHeart /> Favorites
         </Link>
-        {currentUser ? (
-          <div className="user-menu">
-            <button onClick={toggleMenu} className="menu-button">
-              {currentUser.email}
-            </button>
-            {menuOpen && (
-              <div className="menu-dropdown">
-                <Link to="/profile" onClick={toggleMenu}>
-                  Profile
+        <div className="user-menu">
+          <button onClick={toggleMenu} className="menu-button">
+            {currentUser ? currentUser.name || "Guest" : "Guest"}
+          </button>
+          {menuOpen && (
+            <div className="menu-dropdown">
+              {currentUser ? (
+                <>
+                  <Link to="/profile" onClick={toggleMenu}>
+                    Profile
+                  </Link>
+                  <Link to="/settings" onClick={toggleMenu}>
+                    Settings
+                  </Link>
+                  <button onClick={handleLogout} className="logout-button">
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" onClick={toggleMenu}>
+                  Login
                 </Link>
-                <Link to="/settings" onClick={toggleMenu}>
-                  Settings
-                </Link>
-                <button onClick={handleLogout} className="logout-button">
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <Link to="/login">Login</Link>
-        )}
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   );

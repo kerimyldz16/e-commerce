@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ProductCard from "../Components/ProductCard.js";
 import { useCartAndFavorites } from "../context/CartAndFavoritesContext.js";
-import productsData from "../utils/products.json";
 import "../Styles/Category.css";
 
 const Category = () => {
@@ -11,10 +10,21 @@ const Category = () => {
   const { handleAddToCart, handleAddToFavorites } = useCartAndFavorites();
 
   useEffect(() => {
-    const filteredProducts = productsData.filter(
-      (product) => product.category === category
-    );
-    setProducts(filteredProducts);
+    // Fetch products from the backend based on category
+    const fetchProductsByCategory = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/products");
+        const data = await response.json();
+        const filteredProducts = data.filter(
+          (product) => product.category === category
+        );
+        setProducts(filteredProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProductsByCategory();
   }, [category]);
 
   return (

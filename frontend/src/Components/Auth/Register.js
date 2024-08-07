@@ -1,32 +1,57 @@
 import React, { useState } from "react";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import app from "../../utils/firebaseConfig.js";
+import { useAuth } from "../../context/AuthContext";
+import { supabase } from "../../utils/supabaseClient";
 import "../../Styles/Register.css";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState(""); // New state for name
   const navigate = useNavigate();
-  const auth = getAuth(app);
+  const { signUp } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log("Registered:", userCredential.user);
-        alert("You registered successfully");
-        navigate("/login");
-      })
-      .catch((error) => {
-        console.error("Error registering:", error.message);
-      });
+
+    try {
+      // Sign up the user
+      const user = await signUp(email, password);
+
+      console.log("Registered:", user);
+
+      // Store user name in the database
+      const { error } = await supabase.from("users").insert([
+        {
+          uid: user.id, // Use the Supabase user ID
+          email: user.email,
+          name,
+        },
+      ]);
+
+      if (error) {
+        throw error;
+      }
+
+      alert("You registered successfully");
+      navigate("/login");
+    } catch (error) {
+      console.error("Error registering:", error.message);
+      alert("Registration failed. Please try again.");
+    }
   };
 
   return (
     <div className="register-container">
       <form onSubmit={handleSubmit} className="register-form">
         <h2>Register</h2>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Name"
+          required
+        />
         <input
           type="email"
           value={email}
