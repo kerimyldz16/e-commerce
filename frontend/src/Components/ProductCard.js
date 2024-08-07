@@ -5,8 +5,13 @@ import { useAuth } from "../context/AuthContext.js";
 import { FaHeart } from "react-icons/fa";
 import "../Styles/ProductCard.css";
 
-const ProductCard = ({ product, onAddToCart, onAddToFavorites, onClick }) => {
-  const { currentUser } = useAuth();
+const ProductCard = ({
+  product,
+  onAddToCart,
+  onAddToFavorites,
+  onRemoveProduct,
+}) => {
+  const { currentUser, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [cartLoading, setCartLoading] = useState(false);
   const [favoritesLoading, setFavoritesLoading] = useState(false);
@@ -38,9 +43,7 @@ const ProductCard = ({ product, onAddToCart, onAddToFavorites, onClick }) => {
   };
 
   return (
-    <div className="product-card" onClick={() => onClick(product)}>
-      {" "}
-      {/* Make entire card clickable */}
+    <div className="product-card">
       <img src={product.image} alt={product.name} className="product-image" />
       <div className="product-details">
         <h3 className="product-name" onClick={handleProductNameClick}>
@@ -57,6 +60,9 @@ const ProductCard = ({ product, onAddToCart, onAddToFavorites, onClick }) => {
           >
             {favoritesLoading ? "Adding..." : <FaHeart />}
           </button>
+          {isAdmin && (
+            <button onClick={() => onRemoveProduct(product.id)}>Remove</button>
+          )}
         </div>
       </div>
     </div>

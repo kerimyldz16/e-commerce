@@ -1,9 +1,9 @@
 // src/Pages/Home.js
 import React, { useState, useEffect } from "react";
 import ProductCard from "../Components/ProductCard.js";
-import ProductModal from "../Components/ProductModal.js";
 import { useCartAndFavorites } from "../context/CartAndFavoritesContext.js";
 import { supabase } from "../utils/supabaseClient.js";
+import { useAuth } from "../context/AuthContext.js";
 import "../Styles/Home.css";
 
 const ITEMS_PER_PAGE = 12; // Number of products per page
@@ -15,7 +15,7 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
   const [currentPage, setCurrentPage] = useState(1);
   const { handleAddToCart, handleAddToFavorites } = useCartAndFavorites();
-  const [selectedProduct, setSelectedProduct] = useState(null); // State for selected product
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     fetchProducts();
@@ -28,14 +28,29 @@ const Home = () => {
         .from("products")
         .select("*");
 
-      if (error) throw error; // Throw error if there's an issue with the request
-
-      console.log("Fetched Products:", productsData); // Log the fetched data
+      if (error) throw error;
 
       setProducts(productsData);
       setFilteredProducts(productsData); // Set filtered products initially to all products
     } catch (error) {
-      console.error("Error fetching products:", error.message); // Log error if fetch fails
+      console.error("Error fetching products:", error.message);
+    }
+  };
+
+  const handleProductRemove = async (productId) => {
+    try {
+      const { error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", productId);
+
+      if (error) throw error;
+
+      alert("Product removed successfully.");
+      fetchProducts(); // Refresh product list
+    } catch (error) {
+      console.error("Error removing product:", error.message);
+      alert("Failed to remove product. Please try again.");
     }
   };
 
@@ -88,16 +103,6 @@ const Home = () => {
     setSuggestions([]);
   };
 
-  // Open the modal with selected product data
-  const openModal = (product) => {
-    setSelectedProduct(product);
-  };
-
-  // Close the modal
-  const closeModal = () => {
-    setSelectedProduct(null);
-  };
-
   return (
     <div className="home">
       <h1>Welcome to My E-commerce Site</h1>
@@ -132,7 +137,7 @@ const Home = () => {
             product={product}
             onAddToCart={handleAddToCart}
             onAddToFavorites={handleAddToFavorites}
-            onClick={openModal} // Pass the openModal function to ProductCard
+            onRemove={isAdmin ? () => handleProductRemove(product.id) : null}
           />
         ))}
       </div>
@@ -149,11 +154,6 @@ const Home = () => {
           </button>
         ))}
       </div>
-
-      {/* Product Modal */}
-      {selectedProduct && (
-        <ProductModal product={selectedProduct} onClose={closeModal} />
-      )}
     </div>
   );
 };

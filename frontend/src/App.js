@@ -7,6 +7,7 @@ import Category from "./Pages/Category.js";
 import Cart from "./Pages/Cart.js";
 import Login from "./Components/Auth/Login.js";
 import Register from "./Components/Auth/Register.js";
+import AddProduct from "./Pages/AddProduct.js";
 import Favorites from "./Pages/Favorites.js";
 import "./Styles/styles.css";
 
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/add-product" element={<AddProduct />} />{" "}
         </Routes>
       </div>
     </Router>

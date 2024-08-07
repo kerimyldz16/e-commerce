@@ -6,19 +6,24 @@ import { FaShoppingCart, FaHeart } from "react-icons/fa";
 import "../Styles/Navbar.css";
 
 const Navbar = () => {
-  const { currentUser, signOut } = useAuth();
+  const { currentUser, signOut, userName, isAdmin } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
 
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
   const handleLogout = async () => {
     try {
       await signOut();
-      setMenuOpen(false);
+      alert("Logged out successfully");
     } catch (error) {
       console.error("Error logging out:", error.message);
+      alert("Failed to log out. Please try again.");
     }
   };
 
@@ -40,6 +45,11 @@ const Navbar = () => {
         <li>
           <Link to="/category/sports">Sports</Link>
         </li>
+        {isAdmin && (
+          <li>
+            <Link to="/add-product">Add Product</Link>
+          </li>
+        )}
       </ul>
       <div className="nav-user">
         <Link to="/cart">
@@ -48,32 +58,28 @@ const Navbar = () => {
         <Link to="/favorites">
           <FaHeart /> Favorites
         </Link>
-        <div className="user-menu">
-          <button onClick={toggleMenu} className="menu-button">
-            {currentUser ? currentUser.name || "Guest" : "Guest"}
-          </button>
-          {menuOpen && (
-            <div className="menu-dropdown">
-              {currentUser ? (
-                <>
-                  <Link to="/profile" onClick={toggleMenu}>
-                    Profile
-                  </Link>
-                  <Link to="/settings" onClick={toggleMenu}>
-                    Settings
-                  </Link>
-                  <button onClick={handleLogout} className="logout-button">
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <Link to="/login" onClick={toggleMenu}>
-                  Login
+        {currentUser ? (
+          <div className="user-menu">
+            <button onClick={toggleMenu} className="menu-button">
+              {userName} <span className="arrow">&#9660;</span>
+            </button>
+            {menuOpen && (
+              <ul className="dropdown-menu">
+                <Link to="/profile" onClick={closeMenu}>
+                  Profile
                 </Link>
-              )}
-            </div>
-          )}
-        </div>
+                <Link to="/settings" onClick={closeMenu}>
+                  Settings
+                </Link>
+                <li>
+                  <button onClick={handleLogout}>Logout</button>
+                </li>
+              </ul>
+            )}
+          </div>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
       </div>
     </nav>
   );

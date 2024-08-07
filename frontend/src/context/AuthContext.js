@@ -1,7 +1,7 @@
 // src/context/AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "../utils/supabaseClient";
-
+import { adminUserIds } from "./../utils/admins";
 // Create a context for authentication
 const AuthContext = createContext();
 
@@ -14,44 +14,63 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    // Initialize session
-    const getSession = async () => {
+    const initializeAuth = async () => {
       const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setCurrentUser(session?.user || null);
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+
+      if (error) {
+        console.error("Error fetching user:", error.message);
+      } else {
+        setCurrentUser(user);
+        if (user) {
+          const { data, error: nameError } = await supabase
+            .from("users")
+            .select("name")
+            .eq("uid", user.id)
+            .single();
+
+          if (nameError) {
+            console.error("Error fetching user name:", nameError.message);
+          } else {
+            setUserName(data.name);
+          }
+        }
+      }
       setLoading(false);
     };
 
-    getSession();
+    const { data: subscription } = supabase.auth.onAuthStateChange(() => {
+      initializeAuth();
+    });
 
-    // Subscribe to authentication state changes
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setCurrentUser(session?.user || null);
-        setLoading(false);
-      }
-    );
+    initializeAuth();
 
     // Cleanup subscription on unmount
     return () => {
-      if (
-        authListener &&
-        typeof authListener.subscription.unsubscribe === "function"
-      ) {
-        authListener.subscription.unsubscribe();
-      }
+      subscription?.unsubscribe?.();
     };
   }, []);
 
-  const signUp = async (email, password) => {
+  const signUp = async (email, password, name) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
+
     if (error) throw error;
+
+    // Save the user's name in the database
+    const { error: insertError } = await supabase
+      .from("users")
+      .insert([{ uid: data.user.id, email, name }]);
+
+    if (insertError) throw insertError;
+
     return data.user;
   };
 
@@ -61,6 +80,18 @@ export const AuthProvider = ({ children }) => {
       password,
     });
     if (error) throw error;
+
+    // Fetch user name
+    const { data: userData, error: nameError } = await supabase
+      .from("users")
+      .select("name")
+      .eq("uid", data.user.id)
+      .single();
+
+    if (nameError) throw nameError;
+
+    setUserName(userData.name);
+
     return data.user;
   };
 
@@ -68,7 +99,9 @@ export const AuthProvider = ({ children }) => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     setCurrentUser(null);
+    setUserName("");
   };
+  const isAdmin = currentUser && adminUserIds.includes(currentUser.id);
 
   const value = {
     currentUser,
@@ -76,6 +109,8 @@ export const AuthProvider = ({ children }) => {
     signUp,
     signIn,
     signOut,
+    userName,
+    isAdmin,
   };
 
   return (
