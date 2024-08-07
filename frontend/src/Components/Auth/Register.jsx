@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
-import { supabase } from "../../utils/supabaseClient.js";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -15,25 +14,11 @@ const Register = () => {
 
     try {
       // Sign up the user
-      const user = await signUp(email, password);
-
+      const user = await signUp(email, password, name); // Pass name here
       console.log("Registered:", user);
 
-      // Store user name in the database
-      const { error } = await supabase.from("users").insert([
-        {
-          uid: user.id, // Use the Supabase user ID
-          email: user.email,
-          name,
-        },
-      ]);
-
-      if (error) {
-        throw error;
-      }
-
       alert("You registered successfully");
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.error("Error registering:", error.message);
       alert("Registration failed. Please try again.");

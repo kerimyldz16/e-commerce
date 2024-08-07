@@ -2,15 +2,13 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "../utils/supabaseClient";
 import { adminUserIds } from "../utils/admins";
-// Create a context for authentication
+
 const AuthContext = createContext();
 
-// Custom hook to use authentication context
 export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-// Authentication provider component
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,89 +16,129 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.getUser();
+      try {
+        // Get the current session
+        const { data: sessionData, error: sessionError } =
+          await supabase.auth.getSession();
 
-      if (error) {
-        console.error("Error fetching user:", error.message);
-      } else {
-        setCurrentUser(user);
-        if (user) {
-          const { data, error: nameError } = await supabase
-            .from("users")
-            .select("name")
-            .eq("uid", user.id)
-            .single();
-
-          if (nameError) {
-            console.error("Error fetching user name:", nameError.message);
-          } else {
-            setUserName(data.name);
-          }
+        if (sessionError) {
+          console.error("Error getting session:", sessionError.message);
+          throw sessionError;
         }
+
+        const user = sessionData.session?.user;
+
+        if (!user) {
+          // No active user session found, this is not an error
+          setLoading(false);
+          return;
+        }
+
+        setCurrentUser(user);
+
+        // Fetch user name from the users table
+        const { data: userData, error: nameError } = await supabase
+          .from("users")
+          .select("name")
+          .eq("uid", user.id) // Ensure correct uid is used
+          .single(); // Expect a single row
+
+        if (nameError) {
+          console.error("Error fetching user name:", nameError.message);
+          throw nameError;
+        }
+
+        setUserName(userData.name);
+      } catch (error) {
+        console.error("Error initializing auth:", error.message);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
-    const { data: subscription } = supabase.auth.onAuthStateChange(() => {
-      initializeAuth();
-    });
+    // Listen for auth state changes
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        initializeAuth();
+      }
+    );
 
     initializeAuth();
 
-    // Cleanup subscription on unmount
     return () => {
-      subscription?.unsubscribe?.();
+      authListener?.subscription?.unsubscribe?.();
     };
   }, []);
 
   const signUp = async (email, password, name) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    try {
+      const { data: signUpData, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
 
-    if (error) throw error;
+      if (error) throw error;
 
-    // Save the user's name in the database
-    const { error: insertError } = await supabase
-      .from("users")
-      .insert([{ uid: data.user.id, email, name }]);
+      if (!signUpData.user) {
+        throw new Error("User sign-up failed.");
+      }
 
-    if (insertError) throw insertError;
+      const { error: insertError } = await supabase
+        .from("users")
+        .insert([{ uid: signUpData.user.id, email, name }]);
 
-    return data.user;
+      if (insertError) throw insertError;
+
+      return signUpData.user;
+    } catch (error) {
+      console.error("Sign-up error:", error.message);
+      throw error;
+    }
   };
 
   const signIn = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) throw error;
+    try {
+      const { data: signInData, error } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-    // Fetch user name
-    const { data: userData, error: nameError } = await supabase
-      .from("users")
-      .select("name")
-      .eq("uid", data.user.id)
-      .single();
+      if (error) throw error;
 
-    if (nameError) throw nameError;
+      if (!signInData.user) {
+        throw new Error("User sign-in failed.");
+      }
 
-    setUserName(userData.name);
+      const { data: userData, error: nameError } = await supabase
+        .from("users")
+        .select("name")
+        .eq("uid", signInData.user.id)
+        .single();
 
-    return data.user;
+      if (nameError) throw nameError;
+
+      setUserName(userData.name);
+
+      return signInData.user;
+    } catch (error) {
+      console.error("Sign-in error:", error.message);
+      throw error;
+    }
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    setCurrentUser(null);
-    setUserName("");
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      setCurrentUser(null);
+      setUserName("");
+    } catch (error) {
+      console.error("Sign-out error:", error.message);
+      throw error;
+    }
   };
+
   const isAdmin = currentUser && adminUserIds.includes(currentUser.id);
 
   const value = {
