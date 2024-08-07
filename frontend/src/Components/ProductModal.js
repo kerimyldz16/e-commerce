@@ -1,3 +1,4 @@
+// src/Components/ProductModal.js
 import React from "react";
 import "../Styles/ProductModal.css";
 
@@ -9,6 +10,8 @@ const ProductModal = ({ product, onClose }) => {
       onClose();
     }
   };
+
+  if (!product) return null; // Return null if no product is selected
 
   return (
     // Add backdrop with an onClick handler

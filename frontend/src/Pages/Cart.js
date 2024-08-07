@@ -23,32 +23,36 @@ const Cart = () => {
     <div className="cart-container">
       <h1>Your Cart</h1>
       <ul className="cart-list">
-        {cartItems.map((item) => (
-          <li
-            key={item.product_id} // Use only product_id since it's unique per user
-            className="cart-item"
-          >
-            <h3>{item.product_name}</h3>
-            <p>Price: ${item.product_price}</p>
-            <p>
-              Quantity:
-              <input
-                type="number"
-                value={item.quantity}
-                min="1"
-                onChange={(e) =>
-                  handleQuantityChange(
-                    item.product_id,
-                    parseInt(e.target.value)
-                  )
-                }
-              />
-            </p>
-            <button onClick={() => handleRemoveFromCart(item.product_id)}>
-              Remove
-            </button>
-          </li>
-        ))}
+        {cartItems.length === 0 ? (
+          <p> No product added to the cart.</p>
+        ) : (
+          cartItems.map((item) => (
+            <li
+              key={item.product_id} // Use only product_id since it's unique per user
+              className="cart-item"
+            >
+              <h3>{item.product_name}</h3>
+              <p>Price: ${item.product_price}</p>
+              <p>
+                Quantity:
+                <input
+                  type="number"
+                  value={item.quantity}
+                  min="1"
+                  onChange={(e) =>
+                    handleQuantityChange(
+                      item.product_id,
+                      parseInt(e.target.value)
+                    )
+                  }
+                />
+              </p>
+              <button onClick={() => handleRemoveFromCart(item.product_id)}>
+                Remove
+              </button>
+            </li>
+          ))
+        )}
       </ul>
       <h2>Total Amount: ${totalAmount.toFixed(2)}</h2>
       <button className="checkout-button">Proceed to Checkout</button>

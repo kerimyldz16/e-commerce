@@ -1,5 +1,7 @@
+// src/Pages/Home.js
 import React, { useState, useEffect } from "react";
 import ProductCard from "../Components/ProductCard.js";
+import ProductModal from "../Components/ProductModal.js";
 import { useCartAndFavorites } from "../context/CartAndFavoritesContext.js";
 import { supabase } from "../utils/supabaseClient.js";
 import "../Styles/Home.css";
@@ -13,6 +15,7 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
   const [currentPage, setCurrentPage] = useState(1);
   const { handleAddToCart, handleAddToFavorites } = useCartAndFavorites();
+  const [selectedProduct, setSelectedProduct] = useState(null); // State for selected product
 
   useEffect(() => {
     fetchProducts();
@@ -21,10 +24,6 @@ const Home = () => {
   // Fetch products from the database
   const fetchProducts = async () => {
     try {
-      // Log Supabase client configuration for debugging
-      console.log("Supabase URL:", supabase.supabaseUrl);
-      console.log("Supabase Anon Key:", supabase.supabaseAnonKey);
-
       const { data: productsData, error } = await supabase
         .from("products")
         .select("*");
@@ -89,6 +88,16 @@ const Home = () => {
     setSuggestions([]);
   };
 
+  // Open the modal with selected product data
+  const openModal = (product) => {
+    setSelectedProduct(product);
+  };
+
+  // Close the modal
+  const closeModal = () => {
+    setSelectedProduct(null);
+  };
+
   return (
     <div className="home">
       <h1>Welcome to My E-commerce Site</h1>
@@ -123,6 +132,7 @@ const Home = () => {
             product={product}
             onAddToCart={handleAddToCart}
             onAddToFavorites={handleAddToFavorites}
+            onClick={openModal} // Pass the openModal function to ProductCard
           />
         ))}
       </div>
@@ -139,6 +149,11 @@ const Home = () => {
           </button>
         ))}
       </div>
+
+      {/* Product Modal */}
+      {selectedProduct && (
+        <ProductModal product={selectedProduct} onClose={closeModal} />
+      )}
     </div>
   );
 };
