@@ -1,8 +1,8 @@
-// src/Pages/AddProduct.js
+// frontend/src/Pages/AddProduct.jsx
+
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { supabase } from "../utils/supabaseClient.js";
-import "../Styles/AddProduct.css";
 
 const AddProduct = () => {
   const { isAdmin } = useAuth();
@@ -15,7 +15,7 @@ const AddProduct = () => {
   });
 
   if (!isAdmin) {
-    return <div>Unauthorized Access</div>;
+    return <div className="text-center text-red-600">Unauthorized Access</div>;
   }
 
   const handleChange = (e) => {
@@ -55,50 +55,55 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="add-product-container">
-      <h1>Add Product</h1>
-      <form onSubmit={handleSubmit} className="add-product-form">
-        <label>
+    <div className="max-w-xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+      <h1 className="text-2xl font-bold mb-4 text-center">Add Product</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <label className="block">
           Name:
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
+            className="mt-1 w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
           />
         </label>
-        <label>
+        <label className="block">
           Price:
           <input
             type="number"
             name="price"
             value={formData.price}
             onChange={handleChange}
+            className="mt-1 w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
           />
         </label>
-        <label>
+        <label className="block">
           Image URL:
           <input
             type="text"
             name="image"
             value={formData.image}
             onChange={handleChange}
+            className="mt-1 w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
           />
         </label>
-        <label>
+        <label className="block">
           Description:
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
+            className="mt-1 w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
           />
         </label>
-        <label>
+        <label className="block">
           Category:
           <select
             name="category"
             value={formData.category}
             onChange={handleChange}
+            className="mt-1 w-full p-3 border rounded-lg focus:outline-none focus:border-blue-500"
           >
             <option value="technology">Technology</option>
             <option value="clothes">Clothes</option>
@@ -106,7 +111,12 @@ const AddProduct = () => {
             <option value="sports">Sports</option>
           </select>
         </label>
-        <button type="submit">Add Product</button>
+        <button
+          type="submit"
+          className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+        >
+          Add Product
+        </button>
       </form>
     </div>
   );

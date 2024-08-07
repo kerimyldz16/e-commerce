@@ -1,10 +1,12 @@
-// src/Pages/Home.js
+// Home.jsx
+
 import React, { useState, useEffect } from "react";
 import ProductCard from "../Components/ProductCard.jsx";
+import ProductModal from "../Components/ProductModal.jsx";
 import { useCartAndFavorites } from "../context/CartAndFavoritesContext.jsx";
 import { supabase } from "../utils/supabaseClient.js";
 import { useAuth } from "../context/AuthContext.jsx";
-import "../Styles/Home.css";
+import { FaSearch } from "react-icons/fa";
 
 const ITEMS_PER_PAGE = 12; // Number of products per page
 
@@ -14,6 +16,7 @@ const Home = () => {
   const [suggestions, setSuggestions] = useState([]); // Suggestions for the search bar
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedProduct, setSelectedProduct] = useState(null); // State for the selected product
   const { handleAddToCart, handleAddToFavorites } = useCartAndFavorites();
   const { isAdmin } = useAuth();
 
@@ -37,6 +40,7 @@ const Home = () => {
     }
   };
 
+  // Define the function to remove a product
   const handleProductRemove = async (productId) => {
     try {
       const { error } = await supabase
@@ -44,10 +48,21 @@ const Home = () => {
         .delete()
         .eq("id", productId);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error removing product:", error.message);
+        alert("Failed to remove product. Please try again.");
+      } else {
+        alert("Product removed successfully.");
+        console.log(`Product with ID ${productId} removed successfully.`);
 
-      alert("Product removed successfully.");
-      fetchProducts(); // Refresh product list
+        // Update local state after successful deletion
+        setFilteredProducts((prevProducts) =>
+          prevProducts.filter((product) => product.id !== productId)
+        );
+        setProducts((prevProducts) =>
+          prevProducts.filter((product) => product.id !== productId)
+        );
+      }
     } catch (error) {
       console.error("Error removing product:", error.message);
       alert("Failed to remove product. Please try again.");
@@ -103,51 +118,78 @@ const Home = () => {
     setSuggestions([]);
   };
 
+  const handleOpenModal = (product) => {
+    setSelectedProduct(product); // Open modal with selected product
+  };
+
+  const handleCloseModal = () => {
+    setSelectedProduct(null); // Close modal
+  };
+
   return (
-    <div className="home">
-      <h1>Welcome to My E-commerce Site</h1>
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        Welcome to My E-commerce Site
+      </h1>
 
       {/* Search Bar */}
-      <input
-        type="text"
-        placeholder="Search products..."
-        value={searchQuery}
-        onChange={handleSearchChange}
-        className="search-bar"
-      />
+      <div className="relative max-w-lg mx-auto">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="w-full p-3 pr-12 border rounded-lg mb-4 focus:outline-none focus:border-blue-500 transition-shadow shadow-sm focus:shadow-lg"
+        />
+        <FaSearch className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg" />
 
-      {/* Search Suggestions */}
-      {suggestions.length > 0 && (
-        <ul className="suggestions">
-          {suggestions.map((suggestion) => (
-            <li
-              key={suggestion.id}
-              onClick={() => handleSuggestionClick(suggestion.name)}
-            >
-              {suggestion.name}
-            </li>
-          ))}
-        </ul>
-      )}
+        {/* Search Suggestions */}
+        {suggestions.length > 0 && (
+          <ul className="absolute w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-1 z-10">
+            {suggestions.map((suggestion) => (
+              <li
+                key={suggestion.id}
+                onClick={() => handleSuggestionClick(suggestion.name)}
+                className="p-2 cursor-pointer hover:bg-gray-100 transition"
+              >
+                {suggestion.name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
-      <div className="product-list">
+      <div className="flex flex-wrap justify-center mt-4 animate-fade-in">
         {getPaginatedProducts().map((product) => (
           <ProductCard
             key={product.id}
             product={product}
             onAddToCart={handleAddToCart}
             onAddToFavorites={handleAddToFavorites}
-            onRemove={isAdmin ? () => handleProductRemove(product.id) : null}
+            onRemoveProduct={isAdmin ? handleProductRemove : undefined} // Pass function to remove product
+            onOpenModal={handleOpenModal} // Pass function to open modal
           />
         ))}
       </div>
 
+      {/* Product Modal */}
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={handleCloseModal} // Pass function to close modal
+        />
+      )}
+
       {/* Pagination Controls */}
-      <div className="pagination">
+      <div className="flex justify-center mt-6 space-x-2">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}
-            className={currentPage === index + 1 ? "active" : ""}
+            className={`px-3 py-1 rounded-lg ${
+              currentPage === index + 1
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700"
+            } hover:bg-blue-600 transition`}
             onClick={() => handlePageChange(index + 1)}
           >
             {index + 1}

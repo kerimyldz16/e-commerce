@@ -1,9 +1,7 @@
-// src/Components/Navbar.js
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { FaShoppingCart, FaHeart } from "react-icons/fa";
-import "../Styles/Navbar.css";
 
 const Navbar = () => {
   const { currentUser, signOut, userName, isAdmin } = useAuth();
@@ -28,59 +26,155 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar">
-      <div className="logo">
-        <Link to="/">Logo</Link>
+    <nav className="bg-gray-800 text-white p-4 shadow-lg">
+      <div className="container mx-auto flex justify-between items-center">
+        <div className="text-2xl font-bold">
+          <Link to="/" className="hover:text-gray-300 transition">
+            Logo
+          </Link>
+        </div>
+        <div className="hidden md:flex items-center space-x-4">
+          <Link
+            to="/category/technology"
+            className="hover:text-gray-300 transition"
+          >
+            Technology
+          </Link>
+          <Link
+            to="/category/clothes"
+            className="hover:text-gray-300 transition"
+          >
+            Clothes
+          </Link>
+          <Link
+            to="/category/furniture"
+            className="hover:text-gray-300 transition"
+          >
+            Furniture
+          </Link>
+          <Link
+            to="/category/sports"
+            className="hover:text-gray-300 transition"
+          >
+            Sports
+          </Link>
+          {isAdmin && (
+            <Link to="/add-product" className="hover:text-gray-300 transition">
+              Add Product
+            </Link>
+          )}
+        </div>
+        <div className="flex items-center space-x-4">
+          <Link
+            to="/cart"
+            className="flex items-center hover:text-gray-300 transition"
+          >
+            <FaShoppingCart /> Cart
+          </Link>
+          <Link
+            to="/favorites"
+            className="flex items-center hover:text-gray-300 transition"
+          >
+            <FaHeart /> Favorites
+          </Link>
+          {currentUser ? (
+            <div className="relative">
+              <button
+                onClick={toggleMenu}
+                className="flex items-center space-x-2 hover:text-gray-300 transition"
+              >
+                {userName} <span className="arrow">&#9660;</span>
+              </button>
+              {menuOpen && (
+                <ul className="absolute right-0 mt-2 w-48 bg-white text-gray-700 shadow-lg rounded-lg">
+                  <li>
+                    <Link
+                      to="/profile"
+                      onClick={closeMenu}
+                      className="block px-4 py-2 hover:bg-gray-100 transition"
+                    >
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/settings"
+                      onClick={closeMenu}
+                      className="block px-4 py-2 hover:bg-gray-100 transition"
+                    >
+                      Settings
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 transition"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              )}
+            </div>
+          ) : (
+            <Link to="/login" className="hover:text-gray-300 transition">
+              Login
+            </Link>
+          )}
+        </div>
+        <button onClick={toggleMenu} className="md:hidden block text-white">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16m-7 6h7"
+            />
+          </svg>
+        </button>
       </div>
-      <ul className="nav-links">
-        <li>
-          <Link to="/category/technology">Technology</Link>
-        </li>
-        <li>
-          <Link to="/category/clothes">Clothes</Link>
-        </li>
-        <li>
-          <Link to="/category/furniture">Furniture</Link>
-        </li>
-        <li>
-          <Link to="/category/sports">Sports</Link>
-        </li>
-        {isAdmin && (
-          <li>
-            <Link to="/add-product">Add Product</Link>
-          </li>
-        )}
-      </ul>
-      <div className="nav-user">
-        <Link to="/cart">
-          <FaShoppingCart /> Cart
-        </Link>
-        <Link to="/favorites">
-          <FaHeart /> Favorites
-        </Link>
-        {currentUser ? (
-          <div className="user-menu">
-            <button onClick={toggleMenu} className="menu-button">
-              {userName} <span className="arrow">&#9660;</span>
-            </button>
-            {menuOpen && (
-              <ul className="dropdown-menu">
-                <Link to="/profile" onClick={closeMenu}>
-                  Profile
-                </Link>
-                <Link to="/settings" onClick={closeMenu}>
-                  Settings
-                </Link>
-                <li>
-                  <button onClick={handleLogout}>Logout</button>
-                </li>
-              </ul>
-            )}
-          </div>
-        ) : (
-          <Link to="/login">Login</Link>
-        )}
-      </div>
+      {menuOpen && (
+        <div className="md:hidden block bg-gray-800 p-2">
+          <Link
+            to="/category/technology"
+            className="block px-4 py-2 hover:text-gray-300 transition"
+          >
+            Technology
+          </Link>
+          <Link
+            to="/category/clothes"
+            className="block px-4 py-2 hover:text-gray-300 transition"
+          >
+            Clothes
+          </Link>
+          <Link
+            to="/category/furniture"
+            className="block px-4 py-2 hover:text-gray-300 transition"
+          >
+            Furniture
+          </Link>
+          <Link
+            to="/category/sports"
+            className="block px-4 py-2 hover:text-gray-300 transition"
+          >
+            Sports
+          </Link>
+          {isAdmin && (
+            <Link
+              to="/add-product"
+              className="block px-4 py-2 hover:text-gray-300 transition"
+            >
+              Add Product
+            </Link>
+          )}
+        </div>
+      )}
     </nav>
   );
 };
