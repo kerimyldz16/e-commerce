@@ -1,5 +1,5 @@
 import React from "react";
-import { useCartAndFavorites } from "../context/CartAndFavoritesContext.js";
+import { useCartAndFavorites } from "../context/CartAndFavoritesContext.jsx";
 import "../Styles/Favorites.css";
 
 const Favorites = () => {

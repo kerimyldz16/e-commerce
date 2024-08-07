@@ -1,6 +1,6 @@
 // src/Pages/AddProduct.js
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext.js";
+import { useAuth } from "../context/AuthContext.jsx";
 import { supabase } from "../utils/supabaseClient.js";
 import "../Styles/AddProduct.css";
 

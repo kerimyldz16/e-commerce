@@ -1,7 +1,7 @@
 // src/Components/Navbar.js
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.js";
+import { useAuth } from "../context/AuthContext.jsx";
 import { FaShoppingCart, FaHeart } from "react-icons/fa";
 import "../Styles/Navbar.css";
 

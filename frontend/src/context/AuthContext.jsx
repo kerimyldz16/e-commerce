@@ -1,7 +1,7 @@
 // src/context/AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "../utils/supabaseClient";
-import { adminUserIds } from "./../utils/admins";
+import { adminUserIds } from "../utils/admins";
 // Create a context for authentication
 const AuthContext = createContext();
 

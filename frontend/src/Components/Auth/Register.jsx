@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { supabase } from "../../utils/supabaseClient";
+import { useAuth } from "../../context/AuthContext.jsx";
+import { supabase } from "../../utils/supabaseClient.js";
 import "../../Styles/Register.css";
 
 const Register = () => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import ProductCard from "../Components/ProductCard.js";
-import { useCartAndFavorites } from "../context/CartAndFavoritesContext.js";
+import ProductCard from "../Components/ProductCard.jsx";
+import { useCartAndFavorites } from "../context/CartAndFavoritesContext.jsx";
 import "../Styles/Category.css";
 
 const Category = () => {

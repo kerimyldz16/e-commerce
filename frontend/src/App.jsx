@@ -1,14 +1,14 @@
 // src/App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./Components/Navbar.js";
-import Home from "./Pages/Home.js";
-import Category from "./Pages/Category.js";
-import Cart from "./Pages/Cart.js";
-import Login from "./Components/Auth/Login.js";
-import Register from "./Components/Auth/Register.js";
-import AddProduct from "./Pages/AddProduct.js";
-import Favorites from "./Pages/Favorites.js";
+import Navbar from "./Components/Navbar.jsx";
+import Home from "./Pages/Home.jsx";
+import Category from "./Pages/Category.jsx";
+import Cart from "./Pages/Cart.jsx";
+import Login from "./Components/Auth/Login.jsx";
+import Register from "./Components/Auth/Register.jsx";
+import AddProduct from "./Pages/AddProduct.jsx";
+import Favorites from "./Pages/Favorites.jsx";
 import "./Styles/styles.css";
 
 const App = () => {

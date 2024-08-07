@@ -1,9 +1,9 @@
 // src/Pages/Home.js
 import React, { useState, useEffect } from "react";
-import ProductCard from "../Components/ProductCard.js";
-import { useCartAndFavorites } from "../context/CartAndFavoritesContext.js";
+import ProductCard from "../Components/ProductCard.jsx";
+import { useCartAndFavorites } from "../context/CartAndFavoritesContext.jsx";
 import { supabase } from "../utils/supabaseClient.js";
-import { useAuth } from "../context/AuthContext.js";
+import { useAuth } from "../context/AuthContext.jsx";
 import "../Styles/Home.css";
 
 const ITEMS_PER_PAGE = 12; // Number of products per page
