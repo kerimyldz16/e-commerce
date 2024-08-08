@@ -6,7 +6,7 @@ import { supabase } from "../utils/supabaseClient.js";
 import { toast } from "react-toastify";
 import ProductModal from "../Components/ProductModal"; // Import the ProductModal component
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 10;
 
 const Category = () => {
   const { category } = useParams(); // url parametrelerinden kategoriyi getir

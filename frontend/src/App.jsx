@@ -53,7 +53,7 @@ const App = () => {
       <div className="App flex flex-col min-h-screen">
         <Navbar />
         <AppContent />
-        <ToastContainer position="bottom-right" autoClose={1000} />{" "}
+        <ToastContainer position="bottom-right" autoClose={1000} />
       </div>
     </Router>
   );

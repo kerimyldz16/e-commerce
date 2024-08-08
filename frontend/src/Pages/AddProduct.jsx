@@ -33,13 +33,15 @@ const AddProduct = () => {
     }
 
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("products")
         .insert([{ name, price, image, description, category }]);
 
       if (error) throw error;
 
+      console.log("Product added:", data);
       toast.success("Product added successfully.");
+
       setFormData({
         name: "",
         price: "",
@@ -48,7 +50,7 @@ const AddProduct = () => {
         category: "technology",
       });
     } catch (error) {
-      console.error("Error adding product:", error.message);
+      console.error("Error adding product:", error);
       toast.error("Failed to add product. Please try again.");
     }
   };

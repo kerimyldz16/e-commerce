@@ -70,13 +70,13 @@ const Navbar = () => {
         <div className="flex items-center space-x-4 px-4">
           <Link
             to="/cart"
-            className="flex items-center hover:text-gray-300 transition"
+            className="flex items-center hover:text-gray-300 transition gap-1"
           >
             <FaShoppingCart /> Cart
           </Link>
           <Link
             to="/favorites"
-            className="flex items-center hover:text-gray-300 transition"
+            className="flex items-center hover:text-gray-300 transition gap-1"
           >
             <FaHeart /> Favorites
           </Link>
