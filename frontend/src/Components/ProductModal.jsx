@@ -36,7 +36,6 @@ const ProductModal = ({ product, onClose, onAddToCart, onAddToFavorites }) => {
 
   // modalı kapatmak için backdrop handle click !
   const handleBackdropClick = (event) => {
-    // Ensure className is a string before calling includes
     if (
       typeof event.target.className === "string" &&
       event.target.className.includes("modal-backdrop")

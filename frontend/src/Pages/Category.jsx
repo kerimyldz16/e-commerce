@@ -12,7 +12,7 @@ const Category = () => {
   const { category } = useParams(); // url parametrelerinden kategoriyi getir
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedProduct, setSelectedProduct] = useState(null); // State for the selected product
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const { handleAddToCart, handleAddToFavorites } = useCartAndFavorites();
 
   // Databaseden kategoriye göre product fetchleme
@@ -75,7 +75,7 @@ const Category = () => {
               product={product}
               onAddToCart={handleAddToCart}
               onAddToFavorites={handleAddToFavorites}
-              onOpenModal={handleOpenModal} // Pass the onOpenModal function
+              onOpenModal={handleOpenModal}
             />
           ))}
         </div>
@@ -105,7 +105,7 @@ const Category = () => {
           product={selectedProduct}
           onClose={handleCloseModal}
           onAddToCart={handleAddToCart}
-          onAddToFavorites={handleAddToFavorites} // Pass the onCloseModal function
+          onAddToFavorites={handleAddToFavorites}
         />
       )}
     </div>

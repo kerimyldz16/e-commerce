@@ -137,9 +137,7 @@ const Home = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">
-        Welcome to My E-commerce Site
-      </h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">Welcome to ShopGO</h1>
 
       {/* Search Bar */}
       <div className="relative max-w-lg mx-auto">
