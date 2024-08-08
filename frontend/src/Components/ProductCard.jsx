@@ -26,7 +26,6 @@ const ProductCard = ({
       setCartLoading(true); // art arda basmayı engelle!
       await onAddToCart(product);
       setCartLoading(false); // loading state'i resetle!
-      toast.success("Product added to cart!");
     }
   };
 
@@ -39,7 +38,6 @@ const ProductCard = ({
       setFavoritesLoading(true);
       await onAddToFavorites(product);
       setFavoritesLoading(false);
-      toast.success("Product added to favorites!");
     }
   };
 

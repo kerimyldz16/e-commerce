@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { FaShoppingCart, FaHeart } from "react-icons/fa";
 import { toast } from "react-toastify";
+import Logo from "../assets/logo.png";
 
 const Navbar = () => {
   const { currentUser, signOut, userName, isAdmin } = useAuth();
@@ -20,6 +21,7 @@ const Navbar = () => {
     try {
       await signOut();
       toast.success("Logged out successfully");
+      closeMenu(); // Close the menu after logging out
     } catch (error) {
       console.error("Error logging out:", error.message);
       toast.error("Failed to log out. Please try again.");
@@ -27,11 +29,11 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-800 text-white p-4 shadow-lg">
+    <nav className="bg-gray-800 text-white p-1 shadow-lg relative">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-2xl font-bold">
           <Link to="/" className="hover:text-gray-300 transition">
-            Logo
+            <img className="h-24 w-24" src={Logo} alt="Logo" />
           </Link>
         </div>
         <div className="hidden md:flex items-center space-x-4">
@@ -65,7 +67,7 @@ const Navbar = () => {
             </Link>
           )}
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 px-4">
           <Link
             to="/cart"
             className="flex items-center hover:text-gray-300 transition"
@@ -87,7 +89,7 @@ const Navbar = () => {
                 {userName} <span className="arrow">&#9660;</span>
               </button>
               {menuOpen && (
-                <ul className="absolute right-0 mt-2 w-48 bg-white text-gray-700 shadow-lg rounded-lg">
+                <ul className="absolute right-0 mt-2 w-48 bg-white text-gray-700 shadow-lg rounded-lg z-50">
                   <li>
                     <Link
                       to="/profile"

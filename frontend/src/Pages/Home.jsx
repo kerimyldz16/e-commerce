@@ -20,24 +20,33 @@ const Home = () => {
   const { isAdmin } = useAuth();
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data: productsData, error } = await supabase
+          .from("products")
+          .select("*");
+
+        if (error) throw error;
+
+        const shuffledProducts = shuffleArray(productsData); // Shuffle the products array
+        setProducts(shuffledProducts);
+        setFilteredProducts(shuffledProducts); // başlangıçta bütün productların datasını Filtered setle!
+      } catch (error) {
+        console.error("Error fetching products:", error.message);
+        toast.error("Failed to fetch products.");
+      }
+    };
+
     fetchProducts();
-  }, []);
+  }, []); // Empty dependency array to run only once
 
-  // databaseden product fetchleme
-  const fetchProducts = async () => {
-    try {
-      const { data: productsData, error } = await supabase
-        .from("products")
-        .select("*");
-
-      if (error) throw error;
-
-      setProducts(productsData);
-      setFilteredProducts(productsData); // başlangıçta bütün productların datasını Filtered setle!
-    } catch (error) {
-      console.error("Error fetching products:", error.message);
-      toast.error("Failed to fetch products.");
+  // Custom shuffle function
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
   };
 
   // ürün silme function'u
@@ -159,7 +168,7 @@ const Home = () => {
         )}
       </div>
 
-      <div className="flex flex-wrap justify-center mt-4  animate-fade-in">
+      <div className="flex flex-wrap justify-center mt-4 animate-fade-in">
         {getPaginatedProducts().map((product) => (
           <ProductCard
             key={product.id}
@@ -167,14 +176,19 @@ const Home = () => {
             onAddToCart={handleAddToCart}
             onAddToFavorites={handleAddToFavorites}
             onRemoveProduct={isAdmin ? handleProductRemove : undefined} // user adminse ürün silmek için function
-            onOpenModal={handleOpenModal} //
+            onOpenModal={handleOpenModal}
           />
         ))}
       </div>
 
       {/* Product Modal */}
       {selectedProduct && (
-        <ProductModal product={selectedProduct} onClose={handleCloseModal} />
+        <ProductModal
+          product={selectedProduct}
+          onClose={handleCloseModal}
+          onAddToCart={handleAddToCart}
+          onAddToFavorites={handleAddToFavorites}
+        />
       )}
 
       {/* Pagination Controls */}

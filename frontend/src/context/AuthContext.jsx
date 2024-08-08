@@ -1,4 +1,3 @@
-// src/context/AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "../utils/supabaseClient";
 import { adminUserIds } from "../utils/admins";
@@ -17,7 +16,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        // Güncel session(aktif kullanıcı)'ı getle
         const { data: sessionData, error: sessionError } =
           await supabase.auth.getSession();
 
@@ -29,14 +27,12 @@ export const AuthProvider = ({ children }) => {
         const user = sessionData.session?.user;
 
         if (!user) {
-          // aktif kullanıcı bulunamadı!
           setLoading(false);
           return;
         }
 
         setCurrentUser(user);
 
-        // databaseden user name fetchle!
         const { data: userData, error: nameError } = await supabase
           .from("users")
           .select("name")
@@ -56,7 +52,6 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    // auth statet'in değişip değişmediğini dinle
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         initializeAuth();

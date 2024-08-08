@@ -4,8 +4,10 @@ import {
   Routes,
   Route,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { useAuth } from "./context/AuthContext";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./Components/Navbar.jsx";
 import Footer from "./Components/Footer.jsx";
@@ -21,6 +23,7 @@ import "./Styles/styles.css";
 // footer'ı şartlı render için custom component oluşturma
 const AppContent = () => {
   const location = useLocation(); // güncel lokasyonu tespit etme
+  const { currentUser } = useAuth();
 
   return (
     <div className="flex-grow relative">
@@ -29,8 +32,14 @@ const AppContent = () => {
         <Route path="/category/:category" element={<Category />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/favorites" element={<Favorites />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/login"
+          element={currentUser ? <Navigate to="/" /> : <Login />}
+        />
+        <Route
+          path="/register"
+          element={currentUser ? <Navigate to="/" /> : <Register />}
+        />
         <Route path="/add-product" element={<AddProduct />} />
       </Routes>
       {location.pathname === "/" && <Footer />}
@@ -44,7 +53,7 @@ const App = () => {
       <div className="App flex flex-col min-h-screen">
         <Navbar />
         <AppContent />
-        <ToastContainer position="bottom-right" autoClose={3000} />{" "}
+        <ToastContainer position="bottom-right" autoClose={1000} />{" "}
       </div>
     </Router>
   );

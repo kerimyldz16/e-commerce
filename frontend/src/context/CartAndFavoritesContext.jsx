@@ -214,7 +214,6 @@ export const CartAndFavoritesProvider = ({ children }) => {
       setFavorites((prevItems) =>
         prevItems.filter((item) => item.product_id !== productId)
       );
-      toast.success("Product removed from favorites.");
     }
   };
 

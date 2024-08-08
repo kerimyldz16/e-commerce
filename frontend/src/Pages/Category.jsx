@@ -4,6 +4,7 @@ import ProductCard from "../Components/ProductCard.jsx";
 import { useCartAndFavorites } from "../context/CartAndFavoritesContext.jsx";
 import { supabase } from "../utils/supabaseClient.js";
 import { toast } from "react-toastify";
+import ProductModal from "../Components/ProductModal"; // Import the ProductModal component
 
 const ITEMS_PER_PAGE = 8;
 
@@ -11,6 +12,7 @@ const Category = () => {
   const { category } = useParams(); // url parametrelerinden kategoriyi getir
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedProduct, setSelectedProduct] = useState(null); // State for the selected product
   const { handleAddToCart, handleAddToFavorites } = useCartAndFavorites();
 
   // Databaseden kategoriye göre product fetchleme
@@ -45,6 +47,14 @@ const Category = () => {
     setCurrentPage(page);
   };
 
+  const handleOpenModal = (product) => {
+    setSelectedProduct(product);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedProduct(null);
+  };
+
   const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
 
   return (
@@ -65,6 +75,7 @@ const Category = () => {
               product={product}
               onAddToCart={handleAddToCart}
               onAddToFavorites={handleAddToFavorites}
+              onOpenModal={handleOpenModal} // Pass the onOpenModal function
             />
           ))}
         </div>
@@ -87,6 +98,15 @@ const Category = () => {
             </button>
           ))}
         </div>
+      )}
+
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={handleCloseModal}
+          onAddToCart={handleAddToCart}
+          onAddToFavorites={handleAddToFavorites} // Pass the onCloseModal function
+        />
       )}
     </div>
   );

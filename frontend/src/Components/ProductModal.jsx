@@ -1,11 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext.jsx";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-const ProductModal = ({ product, onClose }) => {
+const ProductModal = ({ product, onClose, onAddToCart, onAddToFavorites }) => {
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
+  const [cartLoading, setCartLoading] = useState(false);
+  const [favoritesLoading, setFavoritesLoading] = useState(false);
+
+  const handleAddToCartClick = async (e) => {
+    e.stopPropagation(); //Butona basınca modal'ın açılmasını engelle!
+    if (!currentUser) {
+      toast.info("Please login to add items to your cart.");
+      navigate("/login");
+    } else {
+      setCartLoading(true); // art arda basmayı engelle!
+      await onAddToCart(product);
+      setCartLoading(false); // loading state'i resetle!
+    }
+  };
+
+  const handleAddToFavoritesClick = async (e) => {
+    e.stopPropagation();
+    if (!currentUser) {
+      toast.info("Please login to add items to your favorites.");
+      navigate("/login");
+    } else {
+      setFavoritesLoading(true);
+      await onAddToFavorites(product);
+      setFavoritesLoading(false);
+    }
+  };
+
   // modalı kapatmak için backdrop handle click !
   const handleBackdropClick = (event) => {
-    // click modalın içinde mi kontrol et!
-    if (event.target.className.includes("modal-backdrop")) {
+    // Ensure className is a string before calling includes
+    if (
+      typeof event.target.className === "string" &&
+      event.target.className.includes("modal-backdrop")
+    ) {
       onClose();
     }
   };
@@ -43,16 +78,30 @@ const ProductModal = ({ product, onClose }) => {
             </p>
             <div className="modal-actions flex space-x-4">
               <button
-                onClick={() => console.log("Add to Favorites")}
+                onClick={handleAddToFavoritesClick}
+                disabled={favoritesLoading}
                 className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
               >
-                Add to Favorites
+                {favoritesLoading ? (
+                  <span className="animate-spin">...</span>
+                ) : (
+                  <span className="flex items-center space-x-2">
+                    Add to Favorites
+                  </span>
+                )}
               </button>
               <button
-                onClick={() => console.log("Add to Cart")}
+                onClick={handleAddToCartClick}
+                disabled={cartLoading}
                 className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
               >
-                Add to Cart
+                {cartLoading ? (
+                  <span className="animate-spin">...</span>
+                ) : (
+                  <span className="flex items-center space-x-2">
+                    Add to Cart
+                  </span>
+                )}
               </button>
             </div>
           </div>
