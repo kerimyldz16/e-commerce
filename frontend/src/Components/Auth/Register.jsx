@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState(""); // New state for name
+  const [name, setName] = useState("");
   const navigate = useNavigate();
   const { signUp } = useAuth();
 
@@ -14,8 +14,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      // Sign up the user
-      const user = await signUp(email, password, name); // Pass name here
+      const user = await signUp(email, password, name);
       console.log("Registered:", user);
 
       toast.success("You registered successfully");

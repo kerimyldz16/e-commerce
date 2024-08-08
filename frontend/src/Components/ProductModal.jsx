@@ -1,21 +1,19 @@
-// frontend/src/Components/ProductModal.jsx
-
 import React from "react";
 import { FaTimes } from "react-icons/fa";
 
 const ProductModal = ({ product, onClose }) => {
-  // Handle click on the backdrop to close the modal
+  // modalı kapatmak için backdrop handle click !
   const handleBackdropClick = (event) => {
-    // Check if the click was on the backdrop (not the modal content)
+    // click modalın içinde mi kontrol et!
     if (event.target.className.includes("modal-backdrop")) {
       onClose();
     }
   };
 
-  if (!product) return null; // Return null if no product is selected
+  if (!product) return null; // Product yoksa null dön!
 
   return (
-    // Add backdrop with an onClick handler
+    // Backdrop
     <div
       className="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       onClick={handleBackdropClick}

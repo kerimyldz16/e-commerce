@@ -10,7 +10,7 @@ const AddProduct = () => {
     price: "",
     image: "",
     description: "",
-    category: "technology", // Default category
+    category: "technology", // default kategori
   });
 
   if (!isAdmin) {

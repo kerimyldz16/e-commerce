@@ -20,7 +20,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [favorites, setFavorites] = useState([]);
 
-  // Fetch cart items
+  // Cart itemlerini fetchle
   const fetchCartItems = useCallback(async () => {
     if (!currentUser) return;
 
@@ -40,7 +40,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
     }
   }, [currentUser]);
 
-  // Fetch favorite items
+  // Favorite itemlerini fetchle!
   const fetchFavorites = useCallback(async () => {
     if (!currentUser) return;
 
@@ -67,7 +67,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
     }
   }, [currentUser, fetchCartItems, fetchFavorites]);
 
-  // Handle adding item to cart
+  // productları cart'a ekle!
   const handleAddToCart = async (product) => {
     if (!currentUser) {
       toast.info("Please login to add items to your cart.");
@@ -80,7 +80,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
       );
 
       if (existingItem) {
-        // Update the quantity in the cart
+        // existing item tekrar eklendiğinde quantity arttır!
         const { error } = await supabase
           .from("cart")
           .update({ quantity: existingItem.quantity + 1 })
@@ -101,7 +101,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
           toast.success("Cart updated successfully.");
         }
       } else {
-        // Add new item to the cart
+        // Cart'a yeni product ekle!
         const { error } = await supabase.from("cart").insert([
           {
             user_id: currentUser.id,
@@ -135,7 +135,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
     }
   };
 
-  // Handle adding item to favorites
+  // favorites'e yeni product ekle!
   const handleAddToFavorites = async (product) => {
     if (!currentUser) {
       toast.info("Please login to add items to your favorites.");

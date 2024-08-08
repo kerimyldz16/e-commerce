@@ -18,27 +18,27 @@ const ProductCard = ({
   const [favoritesLoading, setFavoritesLoading] = useState(false);
 
   const handleAddToCartClick = async (e) => {
-    e.stopPropagation(); // Prevent the modal from opening when clicking on the button
+    e.stopPropagation(); //Butona basınca modal'ın açılmasını engelle!
     if (!currentUser) {
       toast.info("Please login to add items to your cart.");
       navigate("/login");
     } else {
-      setCartLoading(true); // Set loading to true when adding to cart
+      setCartLoading(true); // art arda basmayı engelle!
       await onAddToCart(product);
-      setCartLoading(false); // Reset loading state
+      setCartLoading(false); // loading state'i resetle!
       toast.success("Product added to cart!");
     }
   };
 
   const handleAddToFavoritesClick = async (e) => {
-    e.stopPropagation(); // Prevent the modal from opening when clicking on the button
+    e.stopPropagation();
     if (!currentUser) {
       toast.info("Please login to add items to your favorites.");
       navigate("/login");
     } else {
-      setFavoritesLoading(true); // Set loading to true when adding to favorites
+      setFavoritesLoading(true);
       await onAddToFavorites(product);
-      setFavoritesLoading(false); // Reset loading state
+      setFavoritesLoading(false);
       toast.success("Product added to favorites!");
     }
   };
@@ -50,7 +50,7 @@ const ProductCard = ({
   return (
     <div
       className="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-300 w-full sm:w-60 m-4 cursor-pointer"
-      onClick={() => onOpenModal(product)} // Open the modal on card click
+      onClick={() => onOpenModal(product)}
     >
       <img
         src={product.image}

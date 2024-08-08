@@ -1,6 +1,6 @@
 import { supabase } from "../config/supabase.js";
 
-// Get user's favorites
+// User favorilerini fetchle
 export const getFavorites = async (req, res) => {
   try {
     const userId = req.user.uid;
@@ -16,7 +16,7 @@ export const getFavorites = async (req, res) => {
   }
 };
 
-// Add a product to user's favorites
+// user favorilerine ekle
 export const addFavorite = async (req, res) => {
   try {
     const userId = req.user.uid;
@@ -33,7 +33,7 @@ export const addFavorite = async (req, res) => {
   }
 };
 
-// Remove a product from user's favorites
+// user favorilerini silme
 export const removeFavorite = async (req, res) => {
   try {
     const userId = req.user.uid;
@@ -52,7 +52,7 @@ export const removeFavorite = async (req, res) => {
   }
 };
 
-// Get user's cart items
+// user cart'ı fetchleme
 export const getCartItems = async (req, res) => {
   try {
     const userId = req.user.uid;
@@ -68,7 +68,7 @@ export const getCartItems = async (req, res) => {
   }
 };
 
-// Add a product to user's cart
+// user cart'a product ekleme
 export const addCartItem = async (req, res) => {
   try {
     const userId = req.user.uid;
@@ -85,7 +85,7 @@ export const addCartItem = async (req, res) => {
   }
 };
 
-// Remove a product from user's cart
+// user cart'tan product silme
 export const removeCartItem = async (req, res) => {
   try {
     const userId = req.user.uid;
@@ -104,7 +104,7 @@ export const removeCartItem = async (req, res) => {
   }
 };
 
-// Update quantity of a product in user's cart
+// user'ın cart'ındaki ürünlerin quantity'sini arttırma
 export const updateCartItemQuantity = async (req, res) => {
   try {
     const userId = req.user.uid;

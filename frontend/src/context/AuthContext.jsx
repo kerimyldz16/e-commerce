@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        // Get the current session
+        // Güncel session(aktif kullanıcı)'ı getle
         const { data: sessionData, error: sessionError } =
           await supabase.auth.getSession();
 
@@ -29,19 +29,19 @@ export const AuthProvider = ({ children }) => {
         const user = sessionData.session?.user;
 
         if (!user) {
-          // No active user session found, this is not an error
+          // aktif kullanıcı bulunamadı!
           setLoading(false);
           return;
         }
 
         setCurrentUser(user);
 
-        // Fetch user name from the users table
+        // databaseden user name fetchle!
         const { data: userData, error: nameError } = await supabase
           .from("users")
           .select("name")
-          .eq("uid", user.id) // Ensure correct uid is used
-          .single(); // Expect a single row
+          .eq("uid", user.id)
+          .single();
 
         if (nameError) {
           console.error("Error fetching user name:", nameError.message);
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    // Listen for auth state changes
+    // auth statet'in değişip değişmediğini dinle
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         initializeAuth();

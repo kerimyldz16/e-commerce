@@ -6,7 +6,7 @@ const Cart = () => {
   const { cartItems, handleRemoveFromCart, handleUpdateQuantity } =
     useCartAndFavorites();
 
-  // Calculate total amount for the cart
+  // toplam tutarı hesapla!
   const totalAmount = cartItems.reduce(
     (acc, item) => acc + item.product_price * item.quantity,
     0

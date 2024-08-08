@@ -6,7 +6,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import Toastify styles
+import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./Components/Navbar.jsx";
 import Footer from "./Components/Footer.jsx";
 import Home from "./Pages/Home.jsx";
@@ -18,12 +18,12 @@ import AddProduct from "./Pages/AddProduct.jsx";
 import Favorites from "./Pages/Favorites.jsx";
 import "./Styles/styles.css";
 
-// Custom component to conditionally render footer
+// footer'ı şartlı render için custom component oluşturma
 const AppContent = () => {
-  const location = useLocation(); // Get the current location
+  const location = useLocation(); // güncel lokasyonu tespit etme
 
   return (
-    <div className="flex-grow">
+    <div className="flex-grow relative">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/category/:category" element={<Category />} />
@@ -45,7 +45,6 @@ const App = () => {
         <Navbar />
         <AppContent />
         <ToastContainer position="bottom-right" autoClose={3000} />{" "}
-        {/* Add ToastContainer */}
       </div>
     </Router>
   );

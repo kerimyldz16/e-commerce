@@ -1,5 +1,5 @@
 import { supabase } from "../config/supabase.js";
-
+//token control
 export const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 

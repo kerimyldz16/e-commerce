@@ -7,15 +7,15 @@ import { useAuth } from "../context/AuthContext.jsx";
 import { FaSearch } from "react-icons/fa";
 import { toast } from "react-toastify";
 
-const ITEMS_PER_PAGE = 12; // Number of products per page
+const ITEMS_PER_PAGE = 15; // her sayfadaki products sayısı
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [suggestions, setSuggestions] = useState([]); // Suggestions for the search bar
-  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const [suggestions, setSuggestions] = useState([]); // search bardaki öneri için state
+  const [searchQuery, setSearchQuery] = useState(""); // Search bar'ın querysi için state
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedProduct, setSelectedProduct] = useState(null); // State for the selected product
+  const [selectedProduct, setSelectedProduct] = useState(null); // Seçilen ürünler için state
   const { handleAddToCart, handleAddToFavorites } = useCartAndFavorites();
   const { isAdmin } = useAuth();
 
@@ -23,7 +23,7 @@ const Home = () => {
     fetchProducts();
   }, []);
 
-  // Fetch products from the database
+  // databaseden product fetchleme
   const fetchProducts = async () => {
     try {
       const { data: productsData, error } = await supabase
@@ -33,14 +33,14 @@ const Home = () => {
       if (error) throw error;
 
       setProducts(productsData);
-      setFilteredProducts(productsData); // Set filtered products initially to all products
+      setFilteredProducts(productsData); // başlangıçta bütün productların datasını Filtered setle!
     } catch (error) {
       console.error("Error fetching products:", error.message);
       toast.error("Failed to fetch products.");
     }
   };
 
-  // Define the function to remove a product
+  // ürün silme function'u
   const handleProductRemove = async (productId) => {
     try {
       const { error } = await supabase
@@ -55,7 +55,7 @@ const Home = () => {
         toast.success("Product removed successfully.");
         console.log(`Product with ID ${productId} removed successfully.`);
 
-        // Update local state after successful deletion
+        // eğer silme başarılıysa local state'i update'le
         setFilteredProducts((prevProducts) =>
           prevProducts.filter((product) => product.id !== productId)
         );
@@ -69,7 +69,7 @@ const Home = () => {
     }
   };
 
-  // Get products for the current page
+  // current page ürünlerini fetchleme
   const getPaginatedProducts = () => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -86,10 +86,10 @@ const Home = () => {
     const query = e.target.value;
     setSearchQuery(query);
 
-    // Filter products based on the search query
+    // searchlenen ürünleri filtreleme
     if (query.trim() === "") {
-      setFilteredProducts(products); // Show all products if query is empty
-      setSuggestions([]); // Clear suggestions if query is empty
+      setFilteredProducts(products); // query boşsa bütün ürünleri fetchle
+      setSuggestions([]); // query boşsa önerileri gösterme
     } else {
       setFilteredProducts(
         products.filter((product) =>
@@ -97,7 +97,7 @@ const Home = () => {
         )
       );
 
-      // Generate suggestions for the search bar
+      // search barda önerileri getir
       setSuggestions(
         products.filter((product) =>
           product.name.toLowerCase().startsWith(query.toLowerCase())
@@ -105,7 +105,7 @@ const Home = () => {
       );
     }
 
-    setCurrentPage(1); // Reset to the first page when searching
+    setCurrentPage(1); // searchlerken ilk sayfaya resetle
   };
 
   const handleSuggestionClick = (suggestion) => {
@@ -119,11 +119,11 @@ const Home = () => {
   };
 
   const handleOpenModal = (product) => {
-    setSelectedProduct(product); // Open modal with selected product
+    setSelectedProduct(product); // product'ın modalini açma
   };
 
   const handleCloseModal = () => {
-    setSelectedProduct(null); // Close modal
+    setSelectedProduct(null); // product'ın modalini kapatma
   };
 
   return (
@@ -159,29 +159,26 @@ const Home = () => {
         )}
       </div>
 
-      <div className="flex flex-wrap justify-center mt-4 animate-fade-in">
+      <div className="flex flex-wrap justify-center mt-4  animate-fade-in">
         {getPaginatedProducts().map((product) => (
           <ProductCard
             key={product.id}
             product={product}
             onAddToCart={handleAddToCart}
             onAddToFavorites={handleAddToFavorites}
-            onRemoveProduct={isAdmin ? handleProductRemove : undefined} // Pass function to remove product
-            onOpenModal={handleOpenModal} // Pass function to open modal
+            onRemoveProduct={isAdmin ? handleProductRemove : undefined} // user adminse ürün silmek için function
+            onOpenModal={handleOpenModal} //
           />
         ))}
       </div>
 
       {/* Product Modal */}
       {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          onClose={handleCloseModal} // Pass function to close modal
-        />
+        <ProductModal product={selectedProduct} onClose={handleCloseModal} />
       )}
 
       {/* Pagination Controls */}
-      <div className="flex justify-center mt-6 space-x-2">
+      <div className="flex justify-center mt-6 mb-14 space-x-2">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}

@@ -1,4 +1,3 @@
-// src/routes/userRoutes.js
 import express from "express";
 import {
   getFavorites,
@@ -13,7 +12,7 @@ import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Protect routes with authMiddleware
+// route'lare token kontrol ekle!!
 router.use(authMiddleware);
 
 router.get("/favorites", getFavorites);
