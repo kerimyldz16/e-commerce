@@ -87,7 +87,7 @@ const Navbar = () => {
               <FaShoppingCart /> Cart
             </Link>
             {cartItemCount > 0 && (
-              <span className="absolute top-0 left-0 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+              <span className="absolute top-0 left-2 transform -translate-y-1/2 text-red-500 text-xs font-bold">
                 {cartItemCount}
               </span>
             )}
