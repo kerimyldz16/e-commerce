@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useCartAndFavorites } from "../context/CartAndFavoritesContext.jsx";
 import { FaShoppingCart, FaHeart, FaUserCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Logo from "../assets/logo.png";
 
 const Navbar = () => {
   const { currentUser, signOut, userName, isAdmin } = useAuth();
+  const { cartItems } = useCartAndFavorites(); // Get cart items
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -33,6 +35,9 @@ const Navbar = () => {
     location.pathname === path
       ? " text-blue-500"
       : "hover:text-gray-300 transition";
+
+  // Calculate the number of unique items in the cart
+  const cartItemCount = cartItems.length;
 
   return (
     <nav className="bg-gray-800 text-white p-1 shadow-lg relative">
@@ -74,12 +79,19 @@ const Navbar = () => {
           )}
         </div>
         <div className="flex items-center space-x-4 px-4">
-          <Link
-            to="/cart"
-            className={`flex items-center ${getLinkClass("/cart")} gap-1.5`}
-          >
-            <FaShoppingCart /> Cart
-          </Link>
+          <div className="relative">
+            <Link
+              to="/cart"
+              className={`flex items-center ${getLinkClass("/cart")} gap-1.5`}
+            >
+              <FaShoppingCart /> Cart
+            </Link>
+            {cartItemCount > 0 && (
+              <span className="absolute top-0 left-0 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                {cartItemCount}
+              </span>
+            )}
+          </div>
           <Link
             to="/favorites"
             className={`flex items-center ${getLinkClass(
@@ -92,7 +104,7 @@ const Navbar = () => {
             <div className="relative">
               <button
                 onClick={toggleMenu}
-                className="flex items-center space-x-2 hover:text-gray-300 transition"
+                className="flex items-center space-x-2 hover:text-gray-300 transition gap-1.5"
               >
                 <FaUserCircle />
                 {userName}
