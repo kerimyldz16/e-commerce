@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const initializeAuth = async () => {
+      //Oturumun olup olmadığını kontrol et!
       try {
         const { data: sessionData, error: sessionError } =
           await supabase.auth.getSession();
@@ -23,16 +24,16 @@ export const AuthProvider = ({ children }) => {
           console.error("Error getting session:", sessionError.message);
           throw sessionError;
         }
-
+        //sessionData.session undefined döndüğünde hata yerine undefined dönmesi için ? kullan!
         const user = sessionData.session?.user;
-
+        //user null veya undefined dönerse Loading false döndür ve fonksiyonu sonlandır!
         if (!user) {
           setLoading(false);
           return;
         }
-
+        //kullanıcıyı güncelle!
         setCurrentUser(user);
-
+        // kullanıcı adını databaseden çek
         const { data: userData, error: nameError } = await supabase
           .from("users")
           .select("name")
@@ -43,7 +44,7 @@ export const AuthProvider = ({ children }) => {
           console.error("Error fetching user name:", nameError.message);
           throw nameError;
         }
-
+        // kullanıcı adını güncelle
         setUserName(userData.name);
       } catch (error) {
         console.error("Error initializing auth:", error.message);
@@ -51,7 +52,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
       }
     };
-
+    // oturum durumunu dinle, event olursa Auth'u tekrar başlat!
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
         initializeAuth();
@@ -59,7 +60,7 @@ export const AuthProvider = ({ children }) => {
     );
 
     initializeAuth();
-
+    // component unmount olduğunda oturum dinleyicisini temizle.
     return () => {
       authListener?.subscription?.unsubscribe?.();
     };

@@ -22,6 +22,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
 
   // Cart itemlerini fetchle
   const fetchCartItems = useCallback(async () => {
+    //oturum açılmamışsa fonksiyondan çık.
     if (!currentUser) return;
 
     try {
@@ -41,6 +42,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
   }, [currentUser]);
 
   // Favorite itemlerini fetchle!
+  // her render işleminde useEffect dependency fonksiyonlarının gereksiz yere tekrar oluşturulmaması için useCallback kullan!
   const fetchFavorites = useCallback(async () => {
     if (!currentUser) return;
 
@@ -59,7 +61,7 @@ export const CartAndFavoritesProvider = ({ children }) => {
       console.error("Unexpected error fetching favorites:", error);
     }
   }, [currentUser]);
-
+  //current user değiştiğinde cart ve favorites çek
   useEffect(() => {
     if (currentUser) {
       fetchCartItems();

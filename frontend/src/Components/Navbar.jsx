@@ -30,7 +30,7 @@ const Navbar = () => {
       toast.error("Failed to log out. Please try again.");
     }
   };
-
+  // lokasyona göre text'in rengini değiştir
   const getLinkClass = (path) =>
     location.pathname === path
       ? " text-blue-500"
