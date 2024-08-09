@@ -70,7 +70,6 @@ const Home = () => {
         `${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/images/`,
         ""
       );
-      console.log("Derived Image Path for deletion:", imagePath);
       // bucket'dan imageyi sil     //ÇALIŞMIYOR!!!!
       const { error: deleteImageError } = await supabase.storage
         .from("images")
