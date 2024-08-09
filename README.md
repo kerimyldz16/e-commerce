@@ -1,1 +1,1 @@
-A Simple E-Commerce App using React,Node.js,Express,Supabase
+An E-Commerce App using React,Node.js,Express,Supabase
