@@ -8,7 +8,7 @@ import Logo from "../assets/logo.png";
 
 const Navbar = () => {
   const { currentUser, signOut, userName, isAdmin } = useAuth();
-  const { cartItems } = useCartAndFavorites(); // Get cart items
+  const { cartItems } = useCartAndFavorites();
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -24,7 +24,7 @@ const Navbar = () => {
     try {
       await signOut();
       toast.success("Logged out successfully");
-      closeMenu(); // Close the menu after logging out
+      closeMenu();
     } catch (error) {
       console.error("Error logging out:", error.message);
       toast.error("Failed to log out. Please try again.");
@@ -36,7 +36,7 @@ const Navbar = () => {
       ? " text-blue-500"
       : "hover:text-gray-300 transition";
 
-  // Calculate the number of unique items in the cart
+  // carttaki productların sayısını hesapla
   const cartItemCount = cartItems.length;
 
   return (
@@ -87,7 +87,7 @@ const Navbar = () => {
               <FaShoppingCart /> Cart
             </Link>
             {cartItemCount > 0 && (
-              <span className="absolute top-0 left-2 transform -translate-y-1/2 text-red-500 text-xs font-bold">
+              <span className="absolute top-0 left-0 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                 {cartItemCount}
               </span>
             )}

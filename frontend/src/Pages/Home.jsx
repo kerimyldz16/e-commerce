@@ -52,19 +52,54 @@ const Home = () => {
   // ürün silme function'u
   const handleProductRemove = async (productId) => {
     try {
-      const { error } = await supabase
+      // ürünü seç
+      const { data: product, error: fetchError } = await supabase
+        .from("products")
+        .select("image")
+        .eq("id", productId)
+        .single();
+
+      if (fetchError) {
+        console.error("Error fetching product details:", fetchError.message);
+        toast.error("Failed to fetch product details. Please try again.");
+        return;
+      }
+      // image yolunu urlden ayır
+      const imageUrl = product.image;
+      const imagePath = imageUrl.replace(
+        `${process.env.REACT_APP_SUPABASE_URL}/storage/v1/object/public/images/`,
+        ""
+      );
+      console.log("Derived Image Path for deletion:", imagePath);
+      // bucket'dan imageyi sil     //ÇALIŞMIYOR!!!!
+      const { error: deleteImageError } = await supabase.storage
+        .from("images")
+        .remove([`${imagePath}`]);
+      if (deleteImageError) {
+        console.error(
+          "Error deleting image from bucket:",
+          deleteImageError.message
+        );
+        toast.error("Failed to delete product image. Please try again.");
+        return;
+      } else {
+        console.log("Image deleted successfully.");
+      }
+
+      // products table'ından ürünü sil
+      const { error: deleteProductError } = await supabase
         .from("products")
         .delete()
         .eq("id", productId);
 
-      if (error) {
-        console.error("Error removing product:", error.message);
+      if (deleteProductError) {
+        console.error("Error removing product:", deleteProductError.message);
         toast.error("Failed to remove product. Please try again.");
       } else {
         toast.success("Product removed successfully.");
         console.log(`Product with ID ${productId} removed successfully.`);
 
-        // eğer silme başarılıysa local state'i update'le
+        // silme başarılıysa state'i güncelle
         setFilteredProducts((prevProducts) =>
           prevProducts.filter((product) => product.id !== productId)
         );
@@ -73,8 +108,8 @@ const Home = () => {
         );
       }
     } catch (error) {
-      console.error("Error removing product:", error.message);
-      toast.error("Failed to remove product. Please try again.");
+      console.error("Unexpected error removing product:", error);
+      toast.error("Unexpected error removing product.");
     }
   };
 
