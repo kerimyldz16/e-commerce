@@ -18,14 +18,14 @@ const ProductCard = ({
   const [favoritesLoading, setFavoritesLoading] = useState(false);
 
   const handleAddToCartClick = async (e) => {
-    e.stopPropagation(); //Butona basınca modal'ın açılmasını engelle!
+    e.stopPropagation();
     if (!currentUser) {
       toast.info("Please login to add items to your cart.");
       navigate("/login");
     } else {
-      setCartLoading(true); // art arda basmayı engelle!
+      setCartLoading(true);
       await onAddToCart(product);
-      setCartLoading(false); // loading state'i resetle!
+      setCartLoading(false);
     }
   };
 
@@ -47,7 +47,7 @@ const ProductCard = ({
 
   return (
     <div
-      className="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-300 w-full sm:w-60 m-4 cursor-pointer"
+      className="flex flex-col bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-300 w-full sm:w-60 m-4 cursor-pointer"
       onClick={() => onOpenModal(product)}
     >
       <img
@@ -55,15 +55,17 @@ const ProductCard = ({
         alt={product.name}
         className="w-full h-48 object-cover rounded-t-lg"
       />
-      <div className="p-4">
-        <h3
-          className="text-lg font-semibold hover:text-blue-500 transition"
-          onClick={handleProductNameClick}
-        >
-          {product.name}
-        </h3>
-        <p className="text-gray-600">${product.price}</p>
-        <div className="mt-4 flex justify-between items-center space-x-2">
+      <div className="flex flex-col justify-between flex-grow p-4">
+        <div className="flex-grow">
+          <h3
+            className="text-lg font-semibold hover:text-blue-500 transition break-words"
+            onClick={handleProductNameClick}
+          >
+            {product.name}
+          </h3>
+          <p className="text-gray-600">${product.price}</p>
+        </div>
+        <div className="flex justify-between items-center space-x-2 mt-4">
           <button
             onClick={handleAddToCartClick}
             disabled={cartLoading}

@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
-import { FaShoppingCart, FaHeart } from "react-icons/fa";
+import { FaShoppingCart, FaHeart, FaUserCircle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Logo from "../assets/logo.png";
 
 const Navbar = () => {
   const { currentUser, signOut, userName, isAdmin } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -28,6 +29,11 @@ const Navbar = () => {
     }
   };
 
+  const getLinkClass = (path) =>
+    location.pathname === path
+      ? " text-blue-500"
+      : "hover:text-gray-300 transition";
+
   return (
     <nav className="bg-gray-800 text-white p-1 shadow-lg relative">
       <div className="container mx-auto flex justify-between items-center">
@@ -39,30 +45,30 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-4">
           <Link
             to="/category/technology"
-            className="hover:text-gray-300 transition"
+            className={getLinkClass("/category/technology")}
           >
             Technology
           </Link>
           <Link
             to="/category/clothes"
-            className="hover:text-gray-300 transition"
+            className={getLinkClass("/category/clothes")}
           >
             Clothes
           </Link>
           <Link
             to="/category/furniture"
-            className="hover:text-gray-300 transition"
+            className={getLinkClass("/category/furniture")}
           >
             Furniture
           </Link>
           <Link
             to="/category/sports"
-            className="hover:text-gray-300 transition"
+            className={getLinkClass("/category/sports")}
           >
             Sports
           </Link>
           {isAdmin && (
-            <Link to="/add-product" className="hover:text-gray-300 transition">
+            <Link to="/add-product" className={getLinkClass("/add-product")}>
               Add Product
             </Link>
           )}
@@ -70,13 +76,15 @@ const Navbar = () => {
         <div className="flex items-center space-x-4 px-4">
           <Link
             to="/cart"
-            className="flex items-center hover:text-gray-300 transition gap-1"
+            className={`flex items-center ${getLinkClass("/cart")} gap-1.5`}
           >
             <FaShoppingCart /> Cart
           </Link>
           <Link
             to="/favorites"
-            className="flex items-center hover:text-gray-300 transition gap-1"
+            className={`flex items-center ${getLinkClass(
+              "/favorites"
+            )} gap-1.5`}
           >
             <FaHeart /> Favorites
           </Link>
@@ -86,7 +94,8 @@ const Navbar = () => {
                 onClick={toggleMenu}
                 className="flex items-center space-x-2 hover:text-gray-300 transition"
               >
-                {userName} <span className="arrow">&#9660;</span>
+                <FaUserCircle />
+                {userName}
               </button>
               {menuOpen && (
                 <ul className="absolute right-0 mt-2 w-48 bg-white text-gray-700 shadow-lg rounded-lg z-50">
@@ -146,32 +155,34 @@ const Navbar = () => {
         <div className="md:hidden block bg-gray-800 p-2">
           <Link
             to="/category/technology"
-            className="block px-4 py-2 hover:text-gray-300 transition"
+            className={`block px-4 py-2 ${getLinkClass(
+              "/category/technology"
+            )}`}
           >
             Technology
           </Link>
           <Link
             to="/category/clothes"
-            className="block px-4 py-2 hover:text-gray-300 transition"
+            className={`block px-4 py-2 ${getLinkClass("/category/clothes")}`}
           >
             Clothes
           </Link>
           <Link
             to="/category/furniture"
-            className="block px-4 py-2 hover:text-gray-300 transition"
+            className={`block px-4 py-2 ${getLinkClass("/category/furniture")}`}
           >
             Furniture
           </Link>
           <Link
             to="/category/sports"
-            className="block px-4 py-2 hover:text-gray-300 transition"
+            className={`block px-4 py-2 ${getLinkClass("/category/sports")}`}
           >
             Sports
           </Link>
           {isAdmin && (
             <Link
               to="/add-product"
-              className="block px-4 py-2 hover:text-gray-300 transition"
+              className={`block px-4 py-2 ${getLinkClass("/add-product")}`}
             >
               Add Product
             </Link>
