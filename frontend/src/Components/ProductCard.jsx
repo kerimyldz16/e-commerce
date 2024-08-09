@@ -41,10 +41,6 @@ const ProductCard = ({
     }
   };
 
-  const handleProductNameClick = () => {
-    navigate("/", { state: { searchQuery: product.name } });
-  };
-
   return (
     <div
       className="flex flex-col bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-300 w-full sm:w-60 m-4 cursor-pointer"
@@ -57,10 +53,7 @@ const ProductCard = ({
       />
       <div className="flex flex-col justify-between flex-grow p-4">
         <div className="flex-grow">
-          <h3
-            className="text-lg font-semibold hover:text-blue-500 transition break-words"
-            onClick={handleProductNameClick}
-          >
+          <h3 className="text-lg font-semibold hover:text-blue-500 transition break-words">
             {product.name}
           </h3>
           <p className="text-gray-600">${product.price}</p>
