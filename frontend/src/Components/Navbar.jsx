@@ -113,6 +113,13 @@ const Navbar = () => {
                 <ul className="absolute right-0 mt-2 w-48 bg-white text-gray-700 shadow-lg rounded-lg z-50">
                   <li>
                     <Link
+                      to="/orders"
+                      onClick={closeMenu}
+                      className="block px-4 py-2 hover:bg-gray-100 transition"
+                    >
+                      My Orders
+                    </Link>
+                    <Link
                       to="/profile"
                       onClick={closeMenu}
                       className="block px-4 py-2 hover:bg-gray-100 transition"
