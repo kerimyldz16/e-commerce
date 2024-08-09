@@ -78,7 +78,7 @@ const Navbar = () => {
             </Link>
           )}
         </div>
-        <div className="flex items-center space-x-4 px-4">
+        <div className="flex items-center space-x-4 px-4 mr-8">
           <div className="relative">
             <Link
               to="/cart"
@@ -132,9 +132,8 @@ const Navbar = () => {
                   <li>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 transition gap-1.5"
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 transition "
                     >
-                      <FaUserCircle />
                       Logout
                     </button>
                   </li>
@@ -142,8 +141,11 @@ const Navbar = () => {
               )}
             </div>
           ) : (
-            <Link to="/login" className="hover:text-gray-300 transition">
-              Login
+            <Link
+              to="/login"
+              className="flex items-center space-x-2 hover:text-gray-300 transition gap-1.5"
+            >
+              <FaUserCircle /> Login
             </Link>
           )}
         </div>
